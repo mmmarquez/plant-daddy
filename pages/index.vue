@@ -45,6 +45,28 @@ export default {
     };
   },
   methods: {
+    getWeekNumber(d) {
+      d = new Date(+d);
+      d.setHours(0, 0, 0, 0);
+      d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+      var yearStart = new Date(d.getFullYear(), 0, 1);
+      var weekNo = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+      return [d.getFullYear(), weekNo];
+    },
+    parseISOLocal(s) {
+      var b = s.split(/\D/);
+      return new Date(b[0], b[1] - 1, b[2]);
+    },
+    formattedDate(date) {
+      return (
+        date.getUTCDate() +
+        "-" +
+        (date.getUTCMonth() + 1) +
+        "-" +
+        date.getUTCFullYear()
+      );
+    },
+
     snapshotToArray(snapshot) {
       var returnArr = [];
 
@@ -81,12 +103,24 @@ export default {
   },
   computed: {},
   mounted() {
-    this.historicalData.forEach((x, index) => {
-      let s = this.cleanKey(x["key"]);
-      let d = s.toLocalDate();
-      // var d = new Date(parseInt(s));
-      console.log(d);
-    });
+    setTimeout(x => {
+      this.historicalData.forEach((x, index) => {
+        let s = this.cleanKey(x["key"]);
+        let date = s.toLocalDate();
+        console.log(date);
+        // var d = new Date(parseInt(s));
+        // console.log("hhhhh");
+        // let test = this.getWeekNumber(d)
+        var formattedDate =
+          date.getUTCDate() +
+          "-" +
+          (date.getUTCMonth() + 1) +
+          "-" +
+          date.getUTCFullYear();
+
+        console.log(this.formattedDate(date));
+      });
+    }, 1000);
   }
 };
 </script>
